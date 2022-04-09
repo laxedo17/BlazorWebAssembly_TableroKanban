@@ -1,0 +1,66 @@
+﻿@page "/"
+@using BlazorWebAssembly_TaboleiroKanban.Models
+
+<NovaTarefa OnSubmit="AgregarTarefa" @attributes="InputAttributes" />
+<div class="row p-2">
+    <Dropzone Prioridade="TarefaPrioridade.Alta" TarefaElementos="TarefaElementos" OnDrop="OnDrop"
+              OnStartDrag="OnStarDrag" />
+
+    <Dropzone Prioridade="TarefaPrioridade.Media" TarefaElementos="TarefaElementos" OnDrop="OnDrop"
+              OnStartDrag="OnStarDrag" />
+
+    <Dropzone Prioridade="TarefaPrioridade.Baixa" TarefaElementos="TarefaElementos" OnDrop="OnDrop"
+              OnStartDrag="OnStarDrag" />
+
+</div>
+@code {
+    public TarefaElemento ElementoActual;
+    List<TarefaElemento> TarefaElementos = new List<TarefaElemento>();
+    protected override void OnInitialized()
+    {
+        TarefaElementos.Add(new TarefaElemento
+            {
+                TarefaNome = "Chamar a mama",
+                Prioridade = TarefaPrioridade.Alta
+            });
+
+        TarefaElementos.Add(new TarefaElemento
+            {
+                TarefaNome = "Exercicio",
+                Prioridade = TarefaPrioridade.Media
+            });
+
+        TarefaElementos.Add(new TarefaElemento
+            {
+                TarefaNome = "Collelo sacho",
+                Prioridade = TarefaPrioridade.Baixa
+            });
+    }
+    private void OnStarDrag(TarefaElemento elemento)
+    {
+        ElementoActual = elemento;
+    }
+    private void OnDrop(TarefaPrioridade prioridade)
+    {
+        ElementoActual.Prioridade = prioridade;
+        //establece a Prioridade do ElementoActual coa prioridade asociada na dropzone na que se arrastra o elemento
+    }
+
+    public Dictionary<string, object> InputAttributes = new Dictionary<string, object>()
+    {
+            { "maxlength", "25" },
+             { "placeholder", "engade nova tarefa" },
+             { "title", "Este textbox usase para agregar novas tarefas." }
+    };
+
+    private void AgregarTarefa(string tarefaNome)
+    {
+        var tarefaElemento = new TarefaElemento()
+            {
+                TarefaNome = tarefaNome,
+                Prioridade = TarefaPrioridade.Alta
+            };
+
+        TarefaElementos.Add(tarefaElemento);
+    }
+}

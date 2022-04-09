@@ -1,0 +1,37 @@
+﻿@using BlazorWebAssembly_TaboleiroKanban.Models
+
+<div class="priority">
+    <h2>@Prioridade.ToString() Prioridade</h2>
+    <div class="dropzone" ondragover="event.preventDefault();" @ondrop="OnDropHandler">
+        @foreach (var elemento in TarefaElementos.Where(q => q.Prioridade == Prioridade))
+        {
+            <div class="draggable" draggable="true" @ondragstart="@(() => OnDragStartHandler(elemento))">
+                @elemento.TarefaNome
+                <span class="badge badge-secondary">
+                    @elemento.Prioridade</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<TarefaElemento> TarefaElementos { get; set; }
+    [Parameter]
+    public TarefaPrioridade Prioridade { get; set; }
+    [Parameter]
+    public EventCallback<TarefaPrioridade> OnDrop { get; set; }
+    [Parameter]
+    public EventCallback<TarefaElemento> OnStartDrag { get; set; }
+
+
+    private void OnDropHandler()
+    {
+        OnDrop.InvokeAsync(Prioridade);
+    }
+
+    private void OnDragStartHandler(TarefaElemento tarefa)
+    {
+        OnStartDrag.InvokeAsync(tarefa);
+    }
+}

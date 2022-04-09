@@ -1,0 +1,37 @@
+﻿<div class="row p-3" style="max-width:950px">
+    <div class="input-group mb-3">
+        <label class="input-group-text"
+               for="inputTask">
+            Tarefa
+        </label>
+        <input type="text"
+               id="inputTask"
+               class="form-control"
+               @bind-value="@tarefaNome"
+               @attributes="InputParameters" />
+        <button type="button"
+                class="btn btn-outline-secondary"
+                @onclick="OnClickHandler">
+            Agregar tarefa
+        </button>
+    </div>
+</div>
+
+@code {
+    private string tarefaNome;
+
+    [Parameter]
+    public EventCallback<string> OnSubmit { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputParameters { get; set; }
+
+    private async Task OnClickHandler()
+    {
+        if (!string.IsNullOrWhiteSpace(tarefaNome))
+        {
+            await OnSubmit.InvokeAsync(tarefaNome);
+            tarefaNome = null;
+        }
+    }
+}
